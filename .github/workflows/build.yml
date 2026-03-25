@@ -74,7 +74,8 @@ jobs:
 
       - name: Upload to Gofile
         run: |
-          FILE="mkosi.output/Zena-X.raw"
+          FILE=$(ls -t mkosi.output/Zena-X_*.raw | head -n1)
+
           curl --fail \
               --retry 5 \
               --retry-delay 5 \
@@ -84,7 +85,6 @@ jobs:
               -F "file=@$FILE" \
               https://upload.gofile.io/uploadfile \
               -o response.json
-
           echo "Response:"
           cat response.json
 
