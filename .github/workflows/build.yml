@@ -1,0 +1,92 @@
+name: Build Zena-X Image
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and upload image
+    runs-on: ubuntu-latest
+
+    container:
+      image: archlinux:latest
+      options: --privileged
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Initialize pacman
+        run: |
+          pacman -Sy --noconfirm archlinux-keyring
+          pacman-key --init
+          pacman-key --populate archlinux
+
+      - name: Install Build Dependencies
+        run: |
+          pacman -Syu --noconfirm \
+            jq \
+            git \
+            cpio \
+            mkosi \
+            systemd \
+            systemd-ukify \
+            erofs-utils \
+            btrfs-progs \
+            dosfstools \
+            mtools \
+            squashfs-tools
+
+      - name: Prepare repos for mkosi
+        run: |
+          pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+          pacman-key --lsign-key F3B607488DB35A47
+          pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+          pacman-key --lsign-key 3056513887B78AEB
+
+          pacman -U --noconfirm \
+            "https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-keyring-20240331-1-any.pkg.tar.zst" \
+            "https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-mirrorlist-22-1-any.pkg.tar.zst" \
+            "https://mirror.cachyos.org/repo/x86_64/cachyos/cachyos-v3-mirrorlist-22-1-any.pkg.tar.zst" \
+            "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst" \
+            "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst"
+
+          mkdir -p mkosi.sandbox/etc/pacman.d
+
+          cp /etc/pacman.d/mirrorlist mkosi.sandbox/etc/pacman.d/
+          cp /etc/pacman.d/cachyos-mirrorlist mkosi.sandbox/etc/pacman.d/
+          cp /etc/pacman.d/cachyos-v3-mirrorlist mkosi.sandbox/etc/pacman.d/
+          cp /etc/pacman.d/chaotic-mirrorlist mkosi.sandbox/etc/pacman.d/
+
+          mkdir -p mkosi.sandbox/etc/pacman.d/gnupg
+          cp /etc/pacman.d/gnupg/pubring.gpg mkosi.sandbox/etc/pacman.d/gnupg/
+          cp /etc/pacman.d/gnupg/trustdb.gpg mkosi.sandbox/etc/pacman.d/gnupg/
+          cp -r /etc/pacman.d/gnupg/openpgp-revocs.d mkosi.sandbox/etc/pacman.d/gnupg/
+
+      - name: Build Zena-X
+        run: |
+          mkosi build --output-dir mkosi.output
+
+      - name: List output
+        run: ls -lh mkosi.output
+
+      - name: Upload to Gofile
+        run: |
+          FILE="mkosi.output/Zena-X.raw"
+          curl --fail \
+              --retry 5 \
+              --retry-delay 5 \
+              --retry-all-errors \
+              --connect-timeout 30 \
+              --max-time 0 \
+              -F "file=@$FILE" \
+              https://upload.gofile.io/uploadfile \
+              -o response.json
+
+          echo "Response:"
+          cat response.json
+
+          echo "Download link:"
+          jq -r '.data.downloadPage // .data.file.url.full' response.json || true
