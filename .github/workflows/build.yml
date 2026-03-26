@@ -9,8 +9,6 @@ jobs:
   build:
     name: Build and upload image
     runs-on: ubuntu-latest
-    env: 
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
     container:
       image: cachyos/cachyos-v3:latest
@@ -48,11 +46,6 @@ jobs:
       - name: Build Zena-X
         run: |
           mkosi build --output-dir mkosi.output
-
-      - name: Debug EROFS presence
-        run: |
-          # Find the UKI and check for the erofs driver
-          lsinitrd mkosi.output/*.efi | grep erofs || echo "!!! EROFS DRIVER IS MISSING !!!"
 
       - name: List output
         run: ls -lh mkosi.output
