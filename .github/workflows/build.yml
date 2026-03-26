@@ -43,18 +43,6 @@ jobs:
             "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst" \
             "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst"
 
-          mkdir -p mkosi.sandbox/etc/pacman.d
-
-          cp /etc/pacman.d/mirrorlist mkosi.sandbox/etc/pacman.d/
-          cp /etc/pacman.d/cachyos-mirrorlist mkosi.sandbox/etc/pacman.d/
-          cp /etc/pacman.d/cachyos-v3-mirrorlist mkosi.sandbox/etc/pacman.d/
-          cp /etc/pacman.d/chaotic-mirrorlist mkosi.sandbox/etc/pacman.d/
-
-          mkdir -p mkosi.sandbox/etc/pacman.d/gnupg
-          cp /etc/pacman.d/gnupg/pubring.gpg mkosi.sandbox/etc/pacman.d/gnupg/
-          cp /etc/pacman.d/gnupg/trustdb.gpg mkosi.sandbox/etc/pacman.d/gnupg/
-          cp -r /etc/pacman.d/gnupg/openpgp-revocs.d mkosi.sandbox/etc/pacman.d/gnupg/
-
       - name: Build Zena-X
         run: |
           mkosi build --output-dir mkosi.output
