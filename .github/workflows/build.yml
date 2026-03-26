@@ -44,6 +44,11 @@ jobs:
           pacman -U --noconfirm \
             "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst" \
             "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst"
+      
+      - name: Debug EROFS presence
+        run: |
+          # Find the UKI and check for the erofs driver
+          lsinitrd mkosi.output/*.efi | grep erofs || echo "!!! EROFS DRIVER IS MISSING !!!"
 
       - name: Build Zena-X
         run: |
