@@ -45,7 +45,7 @@ jobs:
 
       - name: Build Zena-X
         run: |
-          mkosi build --output-dir mkosi.output
+          mkosi --image-version=$(date +%Y.%m.%d) build --output-dir mkosi.output
 
       - name: List output
         run: ls -lh mkosi.output
