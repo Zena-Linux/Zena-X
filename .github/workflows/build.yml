@@ -57,7 +57,7 @@ jobs:
           mkdir -p mkosi.packages
 
           su - builder -c "
-            paru -S --noconfirm --needed --buildonly dms-shell-bin greetd-dms-greeter-git
+            paru -S --noconfirm --needed --noinstall dms-shell-bin greetd-dms-greeter-git
           "
 
           cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst mkosi.packages/ || true
