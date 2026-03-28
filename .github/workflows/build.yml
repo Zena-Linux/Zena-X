@@ -61,7 +61,7 @@ jobs:
           "
 
           cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst mkosi.packages/ || true
-
+          echo "=== Packages ==="
           ls mkosi.packages
 
       - name: Build Zena-X
