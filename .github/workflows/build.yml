@@ -49,16 +49,16 @@ jobs:
           useradd -m builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-          mkdir -p aur-packages
+          mkdir -p /ctx/aur-packages
 
           su - builder -c "
             paru -S --noconfirm --needed --noinstall dms-shell-bin greetd-dms-greeter-git
           "
 
-          cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst aur-packages/ || true
-          repo-add aur-packages/aur.db.tar.gz aur-packages/*.pkg.tar.zst
+          cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst /ctx/aur-packages/ || true
+          repo-add /ctx/aur-packages/aur.db.tar.gz /ctx/aur-packages/*.pkg.tar.zst
           echo "=== Packages ==="
-          ls aur-packages
+          ls /ctx/aur-packages
 
       - name: Build Zena-X
         run: |
