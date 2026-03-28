@@ -58,7 +58,7 @@ jobs:
           cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst /ctx/aur-packages/ || true
           repo-add /ctx/aur-packages/aur.db.tar.gz /ctx/aur-packages/*.pkg.tar.zst
           echo "=== Packages ==="
-          ls /ctx/aur-packages
+          ls -l /ctx/aur-packages
 
       - name: Build Zena-X
         run: |
