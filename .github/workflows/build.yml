@@ -57,6 +57,7 @@ jobs:
 
           cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst mkosi.packages/ || true
           repo-add mkosi.packages/aur.db.tar.gz mkosi.packages/*.pkg.tar.zst
+          cp mkosi.packages/aur.db.tar.gz mkosi.packages/aur.db || true
           echo "=== Packages ==="
           ls mkosi.packages
 
