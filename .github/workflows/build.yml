@@ -56,6 +56,7 @@ jobs:
           "
 
           cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst mkosi.packages/ || true
+          repo-add mkosi.packages/local.db.tar.gz mkosi.packages/*.pkg.tar.zst
           echo "=== Packages ==="
           ls mkosi.packages
 
