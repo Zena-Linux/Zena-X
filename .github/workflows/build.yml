@@ -43,6 +43,22 @@ jobs:
             "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst" \
             "https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst"
 
+      - name: Build AUR packages
+        run: |
+          pacman -S --noconfirm base-devel git
+
+          git clone https://aur.archlinux.org/paru.git
+          cd paru
+          makepkg -si --noconfirm
+          cd ..
+
+          mkdir -p mkosi.packages
+
+          paru -S --noconfirm --needed --buildonly dms-shell-bin greetd-dms-greeter-git
+
+          find ~/.cache/paru/clone -name "*.pkg.tar.zst" -exec cp {} mkosi.packages/ \;
+          ls mkosi.packages
+
       - name: Build Zena-X
         run: |
           mkosi --image-version=$(date +%Y.%m.%d) build --output-dir mkosi.output
