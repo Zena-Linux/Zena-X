@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+if [[ -d /etc/pam.d ]]; then
+    find /etc/pam.d -mindepth 1 -exec mv {} /usr/lib/pam.d \;
+    rmdir /etc/pam.d
+fi
+
+# Get rid of obsolete stuff in the pam stack.
+find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_shells.so/d' {} \;
+find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_securetty.so/d' {} \;
+
+(
+. /usr/lib/os-release
+
+cat >/usr/lib/os-release <<EOF
+NAME="Zena X"
+ID="$ID"
+ID_LIKE="zena-x-$ID"
+PRETTY_NAME="Zena X $VERSION"
+FANCY_NAME="Zena X $VERSION"
+VERSION="$VERSION"
+VERSION_ID="$VERSION_ID"
+ANSI_COLOR="38:2:252:186:3;1;49"
+ANSI_COLOR_REVERSE="48;2;252;186;3;1;30"
+DEFAULT_HOSTNAME="zena-x-????-????"
+HOME_URL="https://github.com/zena-linux/zena-x"
+)
+
+pacman -S --noconfirm --needed base-devel git sudo
+
+useradd -m -G wheel builder
+echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
+
+sudo -u builder bash <<EOF
+    cd /home/builder
+    git clone https://aur.archlinux.org/paru-bin.git
+    cd paru-bin
+    makepkg -si --noconfirm
+EOF
+
+sudo -u builder paru -S --noconfirm dms-shell-bin greetd-dms-greeter-git
+
+userdel -r builder
+rm /etc/sudoers.d/builder
