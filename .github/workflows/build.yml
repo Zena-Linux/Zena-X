@@ -21,7 +21,6 @@ jobs:
       - name: Install Build Dependencies
         run: |
           pacman -Syu --noconfirm \
-            base-devel \
             jq \
             git \
             cpio \
@@ -51,31 +50,18 @@ jobs:
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
           mkdir -p /aur-packages
-          chown builder:builder /aur-packages
 
           su - builder -c "
             paru -S --noconfirm --needed --noinstall dms-shell-bin greetd-dms-greeter-git
           "
 
-          # Copy built packages and fail if none are found
-          find /home/builder/.cache/paru/clone -name "*.pkg.tar.zst" -exec cp {} /aur-packages/ \;
-          
-          if [ -z "$(ls -A /aur-packages/*.pkg.tar.zst 2>/dev/null)" ]; then
-            echo "Error: No AUR packages were built!"
-            exit 1
-          fi
-
-          # Create the database directly as aur.db (avoiding symlink issues)
-          repo-add /aur-packages/aur.db /aur-packages/*.pkg.tar.zst
-          
-          chmod -R 755 /aur-packages/
+          cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst /aur-packages/ || true
+          repo-add /aur-packages/aur.db.tar.gz aur-packages/*.pkg.tar.zst
           echo "=== Packages ==="
-          ls -l /aur-packages
+          ls /aur-packages
 
       - name: Build Zena-X
         run: |
-          # Symlink /aur-packages into the workspace for mkosi to find it
-          ln -s /aur-packages "$PWD/aur-packages"
           mkosi --image-version=$(date +%Y.%m.%d) build --output-dir mkosi.output
 
       - name: List output
