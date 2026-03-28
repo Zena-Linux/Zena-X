@@ -61,8 +61,6 @@ jobs:
 
       - name: Build Zena-X
         run: |
-          echo "=== Packages ==="
-          ls mkosi.packages
           mkosi --image-version=$(date +%Y.%m.%d) build --output-dir mkosi.output
 
       - name: List output
