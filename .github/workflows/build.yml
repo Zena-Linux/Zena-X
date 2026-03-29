@@ -50,7 +50,6 @@ jobs:
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
           mkdir -p aur-packages
-          mkdir -p /buildroot
 
           su - builder -c "
             paru -S --noconfirm --needed --noinstall dms-shell-bin greetd-dms-greeter-git
@@ -58,9 +57,10 @@ jobs:
 
           cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst aur-packages/ || true
           repo-add aur-packages/aur.db.tar.gz aur-packages/*.pkg.tar.zst
-          cp -r aur-packages /buildroot/aur-packages
           echo "=== Packages ==="
           ls -l aur-packages
+          cd aur-packages
+          python -m http.server 8080 --bind 0.0.0.0 &
 
       - name: Build Zena-X
         run: |
