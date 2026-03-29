@@ -14,4 +14,7 @@ find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_securetty.so/d' {} \
 mkdir -p /run/systemd/system
 
 sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+
+export PATH="$HOME/.nix-profile/bin:$PATH"
+
 nix-store --gc
