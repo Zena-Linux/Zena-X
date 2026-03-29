@@ -59,11 +59,11 @@ jobs:
           repo-add aur-packages/aur.db.tar.gz aur-packages/*.pkg.tar.zst
           echo "=== Packages ==="
           ls -l aur-packages
-          cd aur-packages
-          python -m http.server 8080 --bind 0.0.0.0 &
 
       - name: Build Zena-X
         run: |
+          python -m http.server 8080 --bind 0.0.0.0 --directory aur-packages &
+          sleep 2
           mkosi --image-version=$(date +%Y.%m.%d) build --output-dir mkosi.output
 
       - name: List output
