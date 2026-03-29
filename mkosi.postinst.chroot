@@ -15,5 +15,9 @@ mkdir -p /run/systemd/system
 
 sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
 
+mv /etc/systemd/system/nix-daemon.service /usr/lib/systemd/system/
+mv /etc/systemd/system/nix-daemon.socket /usr/lib/systemd/system/
+mv /etc/systemd/system/sockets.target.wants/nix-daemon.socket /usr/lib/systemd/system/sockets.target.wants/
+
 /root/.nix-profile/bin/nix-env --delete-generations old
 /root/.nix-profile/bin/nix-store --gc
