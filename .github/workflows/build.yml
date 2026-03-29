@@ -62,6 +62,7 @@ jobs:
 
       - name: Build Zena-X
         run: |
+          curl --retry 5 --retry-delay 2 -L https://nixos.org/nix/install -o /tmp/nix-installer.sh
           python -m http.server 8080 --bind 0.0.0.0 --directory aur-packages &
           sleep 2
           mkosi --image-version=$(date +%Y.%m.%d) build --output-dir mkosi.output
