@@ -51,6 +51,9 @@ jobs:
 
           mkdir -p aur-packages
 
+          git config --global http.sslVerify false
+          git config --global http.version HTTP/1.1
+
           su - builder -c "
             paru -S --noconfirm --needed --noinstall dms-shell-bin greetd-dms-greeter-git
           "
