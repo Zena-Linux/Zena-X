@@ -21,3 +21,4 @@ mv /etc/systemd/system/sockets.target.wants/nix-daemon.socket /usr/lib/systemd/s
 
 /root/.nix-profile/bin/nix-env --delete-generations old
 /root/.nix-profile/bin/nix-store --gc
+/root/.nix-profile/bin/nix-store --optimise
