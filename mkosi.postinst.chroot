@@ -11,9 +11,9 @@ fi
 find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_shells.so/d' {} \;
 find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_securetty.so/d' {} \;
 
-mkdir -p /run/systemd/system
+# mkdir -p /run/systemd/system
 
-sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
+# sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon
 
 mv /etc/systemd/system/nix-daemon.service /usr/lib/systemd/system/
 mv /etc/systemd/system/nix-daemon.socket /usr/lib/systemd/system/
