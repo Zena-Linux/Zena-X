@@ -46,11 +46,16 @@ jobs:
 
       - name: Build AUR packages
         run: |
+          pacman -S --noconfirm tor
+          tor &
+          sleep 15
+
           useradd -m builder
           echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
           mkdir -p aur-packages
 
+          git config --global http.proxy socks5://127.0.0.1:9050
           git config --global http.sslVerify false
           git config --global http.version HTTP/1.1
 
