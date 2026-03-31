@@ -12,5 +12,6 @@ find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_shells.so/d' {} \;
 find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_securetty.so/d' {} \;
 
 systemctl enable nix-daemon.socket
-nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
-nix-channel --update
+mv /etc/systemd/system/sockets.target.wants/nix-daemon.socket /usr/lib/systemd/system/sockets.target.wants/
+
+systemctl enable NetworkManager
