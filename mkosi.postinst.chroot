@@ -13,5 +13,7 @@ find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_securetty.so/d' {} \
 
 cat << EOF > /usr/lib/systemd/system-preset/90-default.preset
 enable NetworkManager.service
+disable systemd-networkd.service
+disable systemd-networkd.socket
 enable nix-daemon.socket
 EOF
