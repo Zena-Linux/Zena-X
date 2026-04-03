@@ -16,4 +16,9 @@ enable NetworkManager.service
 disable systemd-networkd.service
 disable systemd-networkd.socket
 enable nix-daemon.socket
+greetd.service
+EOF
+
+cat << EOF > /usr/lib/systemd/user-preset/90-default.preset
+enable dms.service
 EOF
