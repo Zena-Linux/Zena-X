@@ -11,9 +11,7 @@ fi
 find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_shells.so/d' {} \;
 find /usr/lib/pam.d/ -mindepth 1 -exec sed --in-place '/pam_securetty.so/d' {} \;
 
-systemctl enable nix-daemon.socket
-mv /etc/systemd/system/sockets.target.wants/nix-daemon.socket /usr/lib/systemd/system/sockets.target.wants/
-
-systemctl enable NetworkManager
-mv /etc/systemd/system/multi-user.target.wants/NetworkManager.service \
-   /usr/lib/systemd/system/multi-user.target.wants/
+cat << EOF > /usr/lib/systemd/system-preset/90-default.preset
+enable NetworkManager.service
+enable nix-daemon.socket
+EOF
