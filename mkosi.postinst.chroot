@@ -23,3 +23,6 @@ EOF
 cat << EOF > /usr/lib/systemd/user-preset/90-default.preset
 enable dms.service
 EOF
+
+sed -i 's|^Exec=.*|Exec=bash -c "niri-session > /dev/null 2>\&1"|' \
+  /usr/share/wayland-sessions/niri.desktop
