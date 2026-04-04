@@ -15,6 +15,7 @@ cat << EOF > /usr/lib/systemd/system-preset/90-default.preset
 enable NetworkManager.service
 disable systemd-networkd.service
 disable systemd-networkd.socket
+enable systemd-homed.service
 enable nix-daemon.socket
 enable greetd.service
 EOF
