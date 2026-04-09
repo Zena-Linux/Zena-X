@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -euo pipefail
+
+find_image_root() {
+    local candidate
+
+    for candidate in "${1:-}" "${BUILDROOT:-}" "${MKOSI_ROOT:-}" "${IMAGE_ROOT:-}" "${DESTDIR:-}"; do
+        [[ -n "${candidate}" ]] || continue
+        [[ -d "${candidate}" ]] || continue
+
+        if [[ -f "${candidate}/usr/lib/systemd/system/systemd-growfs-root.service" ]] || [[ -d "${candidate}/etc/systemd/system" ]]; then
+            printf '%s\n' "${candidate}"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+image_root="$(find_image_root "${1:-}")" || {
+    echo "Unable to determine mkosi image root for enabling systemd-growfs-root.service" >&2
+    exit 1
+}
+
+systemctl --root="${image_root}" enable systemd-growfs-root.service
