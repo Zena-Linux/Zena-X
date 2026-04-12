@@ -55,7 +55,7 @@ jobs:
           
           mkdir -p aur-packages
           su - builder -c "
-            torsocks paru -S --noconfirm --needed --noinstall dms-shell-bin greetd-dms-greeter-git"
+            torsocks paru -S --noconfirm --needed --noinstall greetd-dms-greeter-git"
 
           cp /home/builder/.cache/paru/clone/*/*.pkg.tar.zst aur-packages/ || true
           repo-add aur-packages/aur.db.tar.gz aur-packages/*.pkg.tar.zst
